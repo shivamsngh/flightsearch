@@ -1,0 +1,8 @@
+<div class="breadcrumbs">
+    <h3 *ngIf="queriedData.oneway">{{queriedData.originCity.toUpperCase()}}&nbsp;<span>&#9992;</span>&nbsp;{{queriedData.destinationCity.toUpperCase()}}</h3>
+    <h3 *ngIf="!queriedData.oneway">{{queriedData.originCity.toUpperCase()}}&nbsp;<span>&#9992;</span> &nbsp;{{queriedData.destinationCity.toUpperCase()}}&nbsp;<span>&#9992;</span>&nbsp;{{queriedData.originCity.toUpperCase()}}</h3>
+    <div class="flightTimingInfo">
+        <p>Departs:{{queriedData.departureDate|date}}</p>
+        <p *ngIf="!queriedData.oneway">Returns:{{queriedData.returnDate |date}}</p>
+    </div>
+</div>

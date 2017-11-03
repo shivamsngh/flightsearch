@@ -1,0 +1,23 @@
+.breadcrumbs{
+    width:100%;
+    background: #1D1F20;
+    color:white;
+}
+.breadcrumbs h3{
+    display: inline-block;
+    padding: 12px;
+}
+.breadcrumbs p{
+    padding: 2px;
+}
+.flightTimingInfo{
+    float: right;
+    display: inline;
+    margin-right: 3px;
+}
+
+@media screen and (max-width: 600px){
+   .flightTimingInfo{
+    float:none;
+   }
+}

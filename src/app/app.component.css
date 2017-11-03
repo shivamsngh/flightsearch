@@ -1,0 +1,120 @@
+.header {
+    grid-area: header;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 10;
+    padding: 20px 0px 20px 20px;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.3);
+    min-height: 20px;
+    background: #1976d2;
+    color:white;
+    text-transform: uppercase;
+}
+.header h1{
+display: inline;
+font-size: 25px;
+}
+
+.footer{
+  grid-area: footer;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  padding: 20px 0px 20px 20px;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.3);
+  min-height: 20px;
+  background: #1976d2;
+  color:white;
+  text-transform: uppercase;
+  /* position: absolute; */
+}
+
+div.search-box{
+  background:#1D1F20;
+  height: 100%
+}
+
+div.flight-card{
+  /* margin:30px; */
+  grid-area: flight-card;
+  width:100%;
+  align-content: center;
+  background-image:url('../assets/img/flightcover.jpg');
+  background-size:contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: background-image 0.5s linear;
+  -webkit-transition: background-image 0.5s linear;
+  
+}
+/* WHILE SEARCHING FOR COMPONENTS */
+.loading{
+  background-image: url('../assets/img/Blocks.svg');
+  background-size:contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+div.info-box{
+  /* margin:30px; */
+  width:100%;
+  align-content: center;
+}
+.wrapper{
+    display: grid;
+    grid-template-areas: "header header"
+                         "search-box flight-card"
+                         "footer footer";
+  
+    grid-template-columns: 25% 1fr;
+  
+    grid-template-rows: 60px 
+              1fr 
+              0px;
+  
+    min-height: 100vh;
+}
+
+@media screen and (max-width: 600px) {
+	.wrapper {
+		grid-template-areas: "header"
+		                     "search-box"
+		                     "info-box"
+		                     "flight-card"
+		                     "footer";
+
+		grid-template-columns: 100%;
+		grid-template-rows: 70px 
+							400px 
+							0.1fr
+							0.5fr 
+              30px;
+    overflow: scroll;
+  }
+}
+
+/* FLying Animation */
+
+div.toony-flight{
+  position: fixed;
+  font-size: 300px;
+  top:30%;
+  left: -1100px;
+  visibility: hidden;
+  display: none;
+  color:#1976D2;
+}
+.fly{
+  visibility: visible !important;
+  display: block !important;
+  animation-name: flyHigh;
+  animation-duration: 4s;
+  -webkit-animation-name: flyHigh; /* Safari 4.0 - 8.0 */
+  -webkit-animation-duration: 3s;
+}
+@keyframes flyHigh {
+  0%   {left: 0px;}
+  
+  100% {left: 1500px;}
+}

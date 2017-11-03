@@ -1,0 +1,83 @@
+<!-- Oneway/Twoway selectror tab -->
+<div class="tab">
+  <button id="oneway" [ngClass]="{'active':search.oneway}" (click)="updateBookingType(true)">One Way</button>
+  <button id="twoway" [ngClass]="{'active':!search.oneway}" (click)="updateBookingType(false)">Return</button>
+</div>
+
+<!-- User Inputs -->
+<div class="userinputs">
+  <form #searchForm="ngForm" (ngSubmit)="onSubmit(searchForm)">
+    <!-- Error Screen -->
+    <div *ngIf="origincity.invalid && (origincity.dirty || origincity.touched)" class="alert alert-danger">
+      <sub style="color:#F74A4A">Please provide a valid input.</sub>
+    </div>
+
+    <!-- Well Datalist does the search and  select trick but unsupported in safari.-->
+    <input type="text" class="form-control" required #origincity="ngModel" name="origincity" placeholder="Enter Origin City"
+      id="origincity" [(ngModel)]="search.originCity" autocomplete="off" (focus)="search.originCity=''" (input)="filterCity(search.originCity, true)"
+    />
+
+    <div class="suggestion" *ngIf="filteredOriginCities.length>0">
+      <ul>
+        <li (click)="valueSelected(city, true)" *ngFor="let city of filteredOriginCities">{{city.charAt(0).toUpperCase() + city.slice(1).toLowerCase()}}</li>
+      </ul>
+    </div>
+
+    <!-- Destination Input -->
+    <div *ngIf="destcity.invalid && (destcity.dirty || destcity.touched)" class="alert alert-danger">
+      <sub style="color:#F74A4A">Please provide a valid input.</sub>
+    </div>
+
+    <input type="text" class="form-control" required #destcity="ngModel" placeholder="Enter Destination City" id="destinationcity"
+      [(ngModel)]="search.destinationCity" autocomplete="off" (focus)="search.destinationCity=''" (input)="filterCity(search.destinationCity, false)"
+      name="destcity" />
+
+    <div class="suggestion" *ngIf="filteredDestinationCities.length>0">
+      <ul>
+        <li (click)="valueSelected(city, false)" *ngFor="let city of filteredDestinationCities">{{city.charAt(0).toUpperCase() + city.slice(1).toLowerCase()}}</li>
+      </ul>
+    </div>
+
+    <!-- Departure Date -->
+    <div *ngIf="depdate.invalid && (depdate.dirty || depdate.touched)" class="alert alert-danger">
+      <sub style="color:#F74A4A">Please provide a valid input.</sub>
+    </div>
+    <input type="date" class="form-control" required #depdate="ngModel" data-placeholder="Departure Date" id="departdate" [(ngModel)]="search.departureDate"
+      placeholder="YYYY-MM-DD" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" name="depdate" min="2017-01-01" max="2019-01-01" required
+      aria-required="true" />
+
+
+    <!-- Return Date -->
+
+    <div *ngIf="!search.oneway">
+      <div *ngIf="retdate.invalid && (retdate.dirty || retdate.touched)" class="alert alert-danger">
+        <sub style="color:#F74A4A">Please provide a valid input.</sub>
+      </div>
+      <input type="date" class="form-control" required #retdate="ngModel" data-placeholder="Return Date" id="returndate" [(ngModel)]="search.returnDate"
+        laceholder="YYYY-MM-DD" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" name="retdate" min="2017-01-01" max="2019-01-01" aria-required="true"
+      />
+
+    </div>
+
+    <!-- Number of passengers -->
+    <div *ngIf="passengers.invalid && (passengers.dirty || passengers.touched)" class="alert alert-danger">
+      <sub style="color:#F74A4A">Please provide a valid input.</sub>
+    </div>
+    <input type="number" class="form-control" required #passengers="ngModel" min=1 placeholder="Passengers" id="passengers" [(ngModel)]="search.passengers"
+      name="passengers" />
+
+    <!-- Submit -->
+    <input type="submit" id="search" name="searchbtn" (click)="clickSearchButton(search)" />
+    <div *ngIf="invalidForm" class="alert alert-danger">
+      <sub style="color:#F74A4A">Invalid Form Data</sub>
+    </div>
+  </form>
+</div>
+
+<!-- Refine search -->
+<div id="refine">
+  <h4>Refine Flight Search</h4>
+  <p>Rs.{{search.refine}}</p>
+  <input type="range" id="refine" [(ngModel)]="search.refine" steps="100" name="points" min="1000" max="10000" (change)="sliderChangeEvent($event)"
+  />
+</div>

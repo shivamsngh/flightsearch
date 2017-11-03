@@ -1,0 +1,54 @@
+<div class="info-box" *ngIf="searchResults.bookingInfo.destinationCity && searchResults!==undefined">
+  <info-box [queriedData]="searchResults.bookingInfo"></info-box>
+</div>
+
+<div *ngFor="let flight of searchResults.oneWayFlights;let i=index">
+  <div class="flightCards" *ngIf="searchResults.bookingInfo.oneway">
+    <div class="onwardDetails">
+      <h1>Rs. {{flight.amount}}</h1>
+      <sub>{{flight.flightNo}}</sub>
+      <h4>{{flight.origin.toUpperCase()}}&nbsp;>>&nbsp;{{flight.destination.toUpperCase()}}</h4>
+      <h4>Depart:{{flight.time.depart|date:'jm'}}</h4>
+      <h4>Arrives:{{flight.time.arrive|date:'jm'}}</h4>
+    </div>
+    <div class="booking">
+      <div class="bookingImage"></div>
+      <button (click)="bookThisFlight($event, i)">Book this Flight</button>
+    </div>
+  </div>
+</div>
+
+<div class="flightCards" *ngFor="let flight of searchResults.returningFlights;let i=index">
+  <div *ngIf="!searchResults.bookingInfo.oneway && searchResults.returningFlights[i] !== undefined && searchResults.oneWayFlights[i]!==undefined">
+    <div class="onwardDetails">
+      <h1>Rs. {{searchResults.oneWayFlights[i].amount}}</h1>
+      <sub>{{searchResults.oneWayFlights[i].flightNo}}</sub>
+      <h4>{{searchResults.oneWayFlights[i].origin.toUpperCase()}}&nbsp;>>&nbsp;{{searchResults.oneWayFlights[i].destination.toUpperCase()}}</h4>
+      <h4>Depart:{{searchResults.oneWayFlights[i].time.depart|date:'jm'}}</h4>
+      <h4>Arrives:{{searchResults.oneWayFlights[i].time.arrive|date:'jm'}}</h4>
+    </div>
+    <div class="returnDetails">
+      <div *ngIf="searchResults.returningFlights.length>0 && searchResults.returningFlights[i] !== undefined && searchResults.oneWayFlights[i]!==undefined">
+        <h1>Rs. {{flight.amount}}</h1>
+        <sub>{{flight.flightNo}}</sub>
+        <h4>{{flight.origin.toUpperCase()}}&nbsp;>>&nbsp;{{flight.destination.toUpperCase()}}</h4>
+        <h4>Depart:{{flight.time.depart|date:'jm' }}</h4>
+        <h4>Arrives:{{flight.time.arrive |date:'jm'}}</h4>
+      </div>
+    </div>
+    <div class="booking">
+      <div class="bookingImage"></div>
+      <button (click)="bookThisFlight($event, i)">Book this Flight</button>
+    </div>
+  </div>
+</div>
+
+<!-- No Results detected -->
+<div class="noflights" *ngIf="searchResults.oneWayFlights.length==0 && searchResults.bookingInfo.destinationCity">
+  <p>Oops seems there is no flight in this range or this date available. Why don't you try for another combination.</p>
+</div>
+
+<!-- Starting search -->
+<div class="idle" *ngIf="!searchResults.bookingInfo.destinationCity">
+  <p>Go on Search Something. It's not that hard to fly.</p>
+</div>

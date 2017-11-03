@@ -1,0 +1,88 @@
+
+.onwardDetails, .returnDetails, .booking{
+    padding:5px;
+    display: inline-block;
+    
+}
+.onwardDetails h1, .returnDetails h1{
+    color:rgb(241, 87, 87);
+    margin:0px !important;
+}
+
+div.booking{
+    display: -ms-inline-grid;
+    display: inline-block;
+    float: right;
+}
+@media screen and (max-width: 600px){
+    div.booking{
+        float: none;
+    }
+}
+div.bookingImage{
+    height: 80px;
+    background: url('../../assets/img/aero.jpg');
+    background-size:cover;
+}
+
+@media screen and (max-width: 600px){
+    .booking{
+        display: -ms-inline-grid;
+        display: inline-grid;
+        float: none;
+    }   
+}
+.booking button{
+    font-size: 16px;
+    padding: 10px;
+    width: 180px;
+    margin-top: 15px;
+    background: #1976D2;
+    color: #fff;
+    border: none;
+    outline: none;
+}
+
+.onwardDetails h1,onwardDetails h2{
+margin:0.5em;
+}
+.flightCards {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width:80%;
+    padding:20px;
+    margin:auto;
+    margin-top:10px;
+    background:lavender;
+    line-height: 1.5;
+}
+
+/* On mouse-over, add a deeper shadow */
+.flightCards:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* No flights case */
+div.noflights{
+font-size: 16px;
+padding: 10px;
+width: 180px;
+margin: auto;
+background: #1D1F20;
+color:#fff;
+position: relative;
+top:100px;
+}
+
+div.idle{
+    font-size: 16px;
+    padding: 10px;
+    margin: auto;
+    background: lightblue;
+    color:grey;
+    position: relative;
+    /* top:100px; */
+    box-shadow: border;
+    text-align: center;
+}

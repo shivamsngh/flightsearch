@@ -1,0 +1,16 @@
+<div class="wrapper">
+  <div class="header"><h1>{{title}}</h1></div>
+  <div class="search-box">
+    <search-box (onSearchResults)="updateInputParams($event)" (loadingComponent)="swapLoading($event)"></search-box>
+  </div>
+ 
+  <div class="flight-card" [ngClass]="{'loading':loading}">
+    <flight-details-card [searchResults]="searchResults" (fly)="updateFlying($event)"></flight-details-card>
+  </div>
+</div>
+<footer>
+  <div class="footer">
+    <sub>&copy; All rights open.</sub>
+  </div>
+</footer>
+<div class="toony-flight" [ngClass]="{'fly':fly}" (animationend)="fly=false"><span>&#9992;</span></div>
