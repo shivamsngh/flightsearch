@@ -37,7 +37,7 @@ export class AppComponent {
    * @param searchResults
    */
   public updateInputParams(searchResults: SearchResponse) {
-    console.log('Ok got that emitted value mate');
+    console.log('Ok got that emitted value mate', searchResults);
     this.bookingInfo = searchResults.bookingInfo;
     this.searchResults = searchResults;
   }

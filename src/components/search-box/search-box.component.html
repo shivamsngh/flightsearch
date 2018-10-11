@@ -6,78 +6,92 @@
 
 <!-- User Inputs -->
 <div class="userinputs">
-  <form #searchForm="ngForm" (ngSubmit)="onSubmit(searchForm)">
-    <!-- Error Screen -->
-    <div *ngIf="origincity.invalid && (origincity.dirty || origincity.touched)" class="alert alert-danger">
-      <sub style="color:#F74A4A">Please provide a valid input.</sub>
-    </div>
+  <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="">From</label>
+      <!-- Well Datalist does the search and  select trick but unsupported in safari.-->
+      <input type="text" class="form-control" required placeholder="Enter Origin City" [ngClass]="{ 'is-invalid': submitted && f.originCity.errors }"
+        autocomplete="off" (focus)="searchForm.get('originCity').setValue('')" formControlName="originCity" />
 
-    <!-- Well Datalist does the search and  select trick but unsupported in safari.-->
-    <input type="text" class="form-control" required #origincity="ngModel" name="origincity" placeholder="Enter Origin City"
-      id="origincity" [(ngModel)]="search.originCity" autocomplete="off" (focus)="search.originCity=''" (input)="filterCity(search.originCity, true)"
-    />
-
-    <div class="suggestion" *ngIf="filteredOriginCities.length>0">
-      <ul>
-        <li (click)="valueSelected(city, true)" *ngFor="let city of filteredOriginCities">{{city.charAt(0).toUpperCase() + city.slice(1).toLowerCase()}}</li>
-      </ul>
-    </div>
-
-    <!-- Destination Input -->
-    <div *ngIf="destcity.invalid && (destcity.dirty || destcity.touched)" class="alert alert-danger">
-      <sub style="color:#F74A4A">Please provide a valid input.</sub>
-    </div>
-
-    <input type="text" class="form-control" required #destcity="ngModel" placeholder="Enter Destination City" id="destinationcity"
-      [(ngModel)]="search.destinationCity" autocomplete="off" (focus)="search.destinationCity=''" (input)="filterCity(search.destinationCity, false)"
-      name="destcity" />
-
-    <div class="suggestion" *ngIf="filteredDestinationCities.length>0">
-      <ul>
-        <li (click)="valueSelected(city, false)" *ngFor="let city of filteredDestinationCities">{{city.charAt(0).toUpperCase() + city.slice(1).toLowerCase()}}</li>
-      </ul>
-    </div>
-
-    <!-- Departure Date -->
-    <div *ngIf="depdate.invalid && (depdate.dirty || depdate.touched)" class="alert alert-danger">
-      <sub style="color:#F74A4A">Please provide a valid input.</sub>
-    </div>
-    <input type="date" class="form-control" required #depdate="ngModel" data-placeholder="Departure Date" id="departdate" [(ngModel)]="search.departureDate"
-      placeholder="YYYY-MM-DD" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" name="depdate" min="2017-01-01" max="2019-01-01" required
-      aria-required="true" />
-
-
-    <!-- Return Date -->
-
-    <div *ngIf="!search.oneway">
-      <div *ngIf="retdate.invalid && (retdate.dirty || retdate.touched)" class="alert alert-danger">
-        <sub style="color:#F74A4A">Please provide a valid input.</sub>
+      <div *ngIf="submitted && f.originCity.errors" class="invalid-feedback">
+        <div *ngIf="f.originCity.errors.required">Required</div>
       </div>
-      <input type="date" class="form-control" required #retdate="ngModel" data-placeholder="Return Date" id="returndate" [(ngModel)]="search.returnDate"
-        laceholder="YYYY-MM-DD" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" name="retdate" min="2017-01-01" max="2019-01-01" aria-required="true"
-      />
 
+      <div class="suggestion" *ngIf="filteredOriginCities.length>0">
+        <ul>
+          <li (click)="valueSelected(city, true)" *ngFor="let city of filteredOriginCities">{{city.charAt(0).toUpperCase()
+            + city.slice(1).toLowerCase()}}</li>
+        </ul>
+      </div>
+    </div>
+    <!-- Destination Input -->
+    <div class="form-group">
+      <label for="">Destination</label>
+
+      <input type="text" class="form-control" required placeholder="Enter Destination City" [ngClass]="{ 'is-invalid': submitted && f.destinationCity.errors }"
+        autocomplete="off" (focus)="searchForm.get('destinationCity').setValue('')" formControlName="destinationCity"
+        name="destinationCity" />
+
+      <div *ngIf="submitted && f.destinationCity.errors" class="invalid-feedback">
+        <div *ngIf="f.destinationCity.errors.required">Required</div>
+      </div>
+
+      <div class="suggestion" *ngIf="filteredDestinationCities.length>0">
+        <ul>
+          <li (click)="valueSelected(city, false)" *ngFor="let city of filteredDestinationCities">{{city.charAt(0).toUpperCase()
+            + city.slice(1).toLowerCase()}}</li>
+        </ul>
+      </div>
+    </div>
+    <!-- Departure Date -->
+    <div class="form-group">
+      <label for="">Departure Date</label>
+
+      <input type="date" class="form-control" required data-placeholder="Departure Date" id="departdate" placeholder="YYYY-MM-DD"
+        pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" name="departureDate" min="2017-01-01" max="2019-01-01" required
+        aria-required="true" formControlName="departureDate" [ngClass]="{ 'is-invalid': submitted && f.departureDate.errors }" />
+
+      <div *ngIf="submitted && f.departureDate.errors" class="invalid-feedback">
+        <div *ngIf="f.departureDate.errors.required">Required</div>
+      </div>
+    </div>
+    <!-- Return Date -->
+    <div class="form-group">
+
+      <div *ngIf="!search.oneway">
+        <label for="">Return Date</label>
+
+        <input type="date" class="form-control" data-placeholder="Return Date" id="returndate" placeholder="YYYY-MM-DD"
+          pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" name="returnDate" min="2017-01-01" max="2019-01-01" aria-required="true"
+          formControlName="returnDate" />
+
+      </div>
     </div>
 
     <!-- Number of passengers -->
-    <div *ngIf="passengers.invalid && (passengers.dirty || passengers.touched)" class="alert alert-danger">
-      <sub style="color:#F74A4A">Please provide a valid input.</sub>
-    </div>
-    <input type="number" class="form-control" required #passengers="ngModel" min=1 placeholder="Passengers" id="passengers" [(ngModel)]="search.passengers"
-      name="passengers" />
+    <div class="form-group">
+      <label for="">Persons</label>
 
-    <!-- Submit -->
-    <input type="submit" id="search" name="searchbtn" (click)="clickSearchButton(search)" />
-    <div *ngIf="invalidForm" class="alert alert-danger">
-      <sub style="color:#F74A4A">Invalid Form Data</sub>
+      <input type="number" class="form-control" required min=1 formControlName="passengers" placeholder="Passengers" id="passengers"
+        name="passengers" />
+
+      <div *ngIf="submitted && f.passengers.errors" class="invalid-feedback">
+        <div *ngIf="f.passengers.errors.required">Required</div>
+      </div>
     </div>
+    <!-- Submit -->
+    <div class="form-group">
+      <input type="submit" id="search" name="searchbtn" />
+    </div>
+
+    <div class="form-group" id="refine">
+        <h4>Refine Flight Search</h4>
+        <p>Rs.{{f.refine.value}}</p>
+        <input type="range" id="refine" formControlName="refine" steps="100" name="points" min="1000" max="10000"
+          (change)="sliderChangeEvent($event)" />
+      </div>
+
   </form>
 </div>
 
 <!-- Refine search -->
-<div id="refine">
-  <h4>Refine Flight Search</h4>
-  <p>Rs.{{search.refine}}</p>
-  <input type="range" id="refine" [(ngModel)]="search.refine" steps="100" name="points" min="1000" max="10000" (change)="sliderChangeEvent($event)"
-  />
-</div>

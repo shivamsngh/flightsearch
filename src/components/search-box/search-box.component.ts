@@ -2,8 +2,12 @@ import { Component, OnInit, EventEmitter, Output, ElementRef } from '@angular/co
 import { BookingInformation } from '../../models/booking-info';
 import { SearchResponse } from '../../models/search-response';
 import { Flights } from '../../models/flights';
-
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { SearchService } from '../../services/search.service';
+import { Subject, Observable, forkJoin } from 'rxjs';
+import 'rxjs/add/operator/take';
+import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'search-box',
@@ -17,27 +21,61 @@ export class SearchBoxComponent implements OnInit {
   @Output() loadingComponent = new EventEmitter<boolean>();
 
   //page variables
-  search: BookingInformation;
+  private search$ = new Subject<BookingInformation>();
+  private flights$: Observable<Flights[]>;
+
+  searchForm: FormGroup;
+
+  refineSearch = new FormControl();
   isFormValid: boolean = false;
   filteredOriginCities: string[] = []
   filteredDestinationCities: string[] = [];
   totalCitiesListedOnServer: string[] = [];
-  invalidForm: boolean = false;
+  search: any;
+  submitted = false;
 
-  constructor(private find: SearchService, private elementRef: ElementRef) {
+  constructor(private find: SearchService, private elementRef: ElementRef, private fb: FormBuilder) {
+
     this.search = {
-      destinationCity: '', originCity: '', departureDate: '', returnDate: '', oneway: true, passengers: 1,
+      oneway: true,
       refine: 1000
     }
+
   }
 
   ngOnInit() {
     //Get all the cities available on initialization of component.
-    this.find.getCitiesListedOnServer().then(cities => {
-      this.totalCitiesListedOnServer = cities;
-    })
-    .catch(e=><any>window.alert("It seems you are directly serving from file. The app would not be able to perform perfectly due to Cross origin restriction."))
+    this.searchForm = this.fb.group(
+      {
+        originCity: ['', Validators.required],
+        destinationCity: ['', Validators.required],
+        departureDate: ['', Validators.required],
+        returnDate: [''],
+        passengers: [1, Validators.required],
+        refine: [100]
+
+      }
+    )
+    this.find.getCitiesListedOnServer()
+      .take(1)
+      .pipe(catchError(e => <any>window.alert("It seems you are directly serving from file. The app would not be able to perform perfectly due to Cross origin restriction.")))
+      .subscribe((cities: string[]) => {
+        this.totalCitiesListedOnServer = cities;
+        console.log("Total Cities", this.totalCitiesListedOnServer)
+      })
+
+    this.flights$ = this.search$.pipe(
+      distinctUntilChanged(),
+      switchMap(booking => this.find.searchFlightAvailability(booking))
+    )
+
+    this.searchForm.get('originCity').valueChanges.pipe(debounceTime(200), distinctUntilChanged()).subscribe(key => this.filterCity(key, true));
+    this.searchForm.get('destinationCity').valueChanges.pipe(debounceTime(200), distinctUntilChanged()).subscribe(key => this.filterCity(key, false))
+    console.log("search form", this.searchForm)
   }
+
+  // getter for form controls
+  get f() { return this.searchForm.controls; }
 
   /**
    * Selected value from list
@@ -45,7 +83,7 @@ export class SearchBoxComponent implements OnInit {
    */
   public valueSelected(city: string, isOrigin: boolean) {
     console.log("selected", city)
-    isOrigin ? this.search.originCity = city : this.search.destinationCity = city;
+    isOrigin ? this.f.originCity.setValue(city) : this.f.destinationCity.setValue(city);
     isOrigin ? this.filteredOriginCities = [] : this.filteredDestinationCities = [];
   }
 
@@ -68,17 +106,19 @@ export class SearchBoxComponent implements OnInit {
    * Check validation of form and proceed for search
    * @param formInputs 
    */
-  public onSubmit(formInputs): void {
-    console.log(formInputs);
-    if (formInputs.form.valid) {
-      this.invalidForm = false;
-      // convert to lowercase
-      this.search.destinationCity = this.search.destinationCity.toLowerCase();
-      this.search.originCity = this.search.originCity.toLowerCase();
-      this.clickSearchButton(this.search);
+  public onSubmit(): void {
+    this.submitted = true;
+    if (this.searchForm.invalid) {
+      return
     }
     else
-      this.invalidForm = true;
+      // convert to lowercase
+      // this.search.destinationCity = this.searchForm..destinationCity.toLowerCase();
+    // this.search.originCity = this.searchForm.originCity.toLowerCase();
+    console.log("f is", this.searchForm)
+    this.searchClickHandler(this.searchForm.value);
+    // this.invalidForm = true;
+
   }
 
   /**
@@ -110,45 +150,47 @@ export class SearchBoxComponent implements OnInit {
     this.search.oneway = oneway;
   }
 
+
   /**
    * Search for flights based on parameters provided.
    * The magic happens here :)
    * @param searchParams 
    */
-  public clickSearchButton(searchParams: BookingInformation): void {
+  public searchClickHandler(searchParams: BookingInformation): void {
+    console.log("Search click handler", this.searchForm)
     this.loadingComponent.emit(true);
-    if (searchParams.oneway) {
-      this.performSearch(searchParams).then((flights) => {
+    if (!searchParams.returnDate) {
+      console.warn("no return")
+      this.performSearch(searchParams).subscribe((flights: Flights[]) => {
         let searhResults: SearchResponse = { oneWayFlights: flights, oneway: true, returningFlights: [], bookingInfo: searchParams }
         this.onSearchResults.emit(searhResults);
         this.loadingComponent.emit(false);
       })
-        .catch(e => console.log("Error in performing search", e));
     }
     else {
       //first check for one way then for the other
-      this.performSearch(searchParams).then((oneWayFlights) => {
-        let returnSearchParams: BookingInformation = {
-          originCity: searchParams.destinationCity,
-          destinationCity: searchParams.originCity,
-          departureDate: searchParams.returnDate,
-          refine: searchParams.refine,
-          passengers: searchParams.passengers,
-          oneway: true
+      const returnSearchParams: BookingInformation = {
+        originCity: searchParams.destinationCity,
+        destinationCity: searchParams.originCity,
+        departureDate: searchParams.returnDate,
+        refine: searchParams.refine,
+        passengers: searchParams.passengers,
+        oneway: true
+      };
+
+      let onwardJourney = this.performSearch(searchParams);
+      let returnJourney = this.performSearch(returnSearchParams);
+
+      forkJoin([onwardJourney, returnJourney]).subscribe(res => {
+        let searchResults: SearchResponse = {
+          oneWayFlights: res[0],
+          oneway: false,
+          returningFlights: res[1],
+          bookingInfo: searchParams
         };
-        this.performSearch(returnSearchParams).then((returningFlights) => {
-          let searchResults: SearchResponse = {
-            oneWayFlights: oneWayFlights,
-            oneway: false,
-            returningFlights: returningFlights,
-            bookingInfo: searchParams
-          };
-          this.onSearchResults.emit(searchResults);
-          this.loadingComponent.emit(false);
-        })
-          .catch(e => console.log("Error in performing search", e));
+        this.onSearchResults.emit(searchResults);
+        this.loadingComponent.emit(false);
       })
-      .catch(e => console.log("Error in performing search", e));
 
     }
   }
@@ -159,13 +201,10 @@ export class SearchBoxComponent implements OnInit {
    */
   private performSearch(searchParams: BookingInformation) {
     return this.find.searchFlightAvailability(searchParams)
-      .then((flights: Flights[]) => {
-        return flights;
-      })
-      .catch(e => {
-        console.log("Error in fetching flights.", e);
-        return Promise.reject(new Array<Flights>())
-      });
+    // .catch(e => {
+    //   console.log("Error in fetching flights.", e);
+    //   return Promise.reject(new Array<Flights>())
+    // });
   }
 
   /**
@@ -175,6 +214,6 @@ export class SearchBoxComponent implements OnInit {
    */
   public sliderChangeEvent(e) {
     console.log("Slider changed");
-    this.clickSearchButton(this.search);
+    this.searchClickHandler(this.search);
   }
 }
