@@ -22,8 +22,12 @@ export class SearchService {
     // bring the data
     // sort the data
     // search the data
+    console.warn("params in service", searchParams)
     return this.http.get(apiUrl)
-      .pipe(map(data => this.searchAndSort(data, searchParams)), catchError(error => Observable.throw(error)))
+      .pipe(
+        map(data => this.searchAndSort(data, searchParams)),
+        catchError(error => Observable.throw(error))
+      )
   }
 
   /**

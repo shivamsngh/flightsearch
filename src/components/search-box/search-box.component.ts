@@ -31,13 +31,17 @@ export class SearchBoxComponent implements OnInit {
   filteredOriginCities: string[] = []
   filteredDestinationCities: string[] = [];
   totalCitiesListedOnServer: string[] = [];
-  search: any;
+  search: BookingInformation;
   submitted = false;
 
   constructor(private find: SearchService, private elementRef: ElementRef, private fb: FormBuilder) {
 
     this.search = {
+      departureDate: '',
+      destinationCity: '',
+      originCity: '',
       oneway: true,
+      passengers: 0,
       refine: 1000
     }
 
@@ -83,7 +87,7 @@ export class SearchBoxComponent implements OnInit {
    */
   public valueSelected(city: string, isOrigin: boolean) {
     console.log("selected", city)
-    isOrigin ? this.f.originCity.setValue(city) : this.f.destinationCity.setValue(city);
+    isOrigin ? this.f.originCity.setValue(city, {emitEvent: false}) : this.f.destinationCity.setValue(city, {emitEvent: false});
     isOrigin ? this.filteredOriginCities = [] : this.filteredDestinationCities = [];
   }
 
@@ -114,8 +118,8 @@ export class SearchBoxComponent implements OnInit {
     else
       // convert to lowercase
       // this.search.destinationCity = this.searchForm..destinationCity.toLowerCase();
-    // this.search.originCity = this.searchForm.originCity.toLowerCase();
-    console.log("f is", this.searchForm)
+      // this.search.originCity = this.searchForm.originCity.toLowerCase();
+      console.log("f is", this.searchForm)
     this.searchClickHandler(this.searchForm.value);
     // this.invalidForm = true;
 
@@ -157,7 +161,7 @@ export class SearchBoxComponent implements OnInit {
    * @param searchParams 
    */
   public searchClickHandler(searchParams: BookingInformation): void {
-    console.log("Search click handler", this.searchForm)
+    console.log("Search click handler params", searchParams)
     this.loadingComponent.emit(true);
     if (!searchParams.returnDate) {
       console.warn("no return")
@@ -175,7 +179,7 @@ export class SearchBoxComponent implements OnInit {
         departureDate: searchParams.returnDate,
         refine: searchParams.refine,
         passengers: searchParams.passengers,
-        oneway: true
+        oneway: false
       };
 
       let onwardJourney = this.performSearch(searchParams);
@@ -214,6 +218,6 @@ export class SearchBoxComponent implements OnInit {
    */
   public sliderChangeEvent(e) {
     console.log("Slider changed");
-    this.searchClickHandler(this.search);
+    this.searchClickHandler(this.searchForm.value);
   }
 }
