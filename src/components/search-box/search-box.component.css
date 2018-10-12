@@ -6,6 +6,10 @@ div ul{
 
 }
 
+label{
+    color: #f1f1f1;
+}
+
 div ul li{
 padding:10px;
 }
