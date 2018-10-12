@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { SearchBoxComponent } from '../components/search-box/search-box.component';
 import { FlightDetailsCardComponent } from '../components/flight-details-card/flight-details-card.component';
 import { InfoBoxComponent } from '../components/info-box/info-box.component';
@@ -10,7 +10,7 @@ import { SearchService } from '../services/search.service';
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, HttpModule],
+      imports: [ReactiveFormsModule, HttpClientModule],
       declarations: [
         AppComponent,
         SearchBoxComponent,

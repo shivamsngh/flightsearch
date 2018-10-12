@@ -2,7 +2,7 @@ import { async, TestBed, inject } from '@angular/core/testing';
 
 import { MockBackend } from '@angular/http/testing';
 
-import { Http, HttpModule, XHRBackend, BaseRequestOptions } from '@angular/http';
+import {  HttpClient, HttpClientModule, HttpBackend  } from '@angular/common/http';
 
 import { SearchService } from './search.service';
 
@@ -11,15 +11,15 @@ describe('SearchService', () => {
   let service: SearchService;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SearchService, MockBackend, BaseRequestOptions, {
-        provide: Http,
-        deps: [MockBackend, BaseRequestOptions],
+      providers: [SearchService, MockBackend, {
+        provide: HttpClient,
+        deps: [MockBackend],
         useFactory:
-        (backend: XHRBackend, defaultOptions: BaseRequestOptions) => {
-          return new Http(backend, defaultOptions);
+        (backend: HttpBackend) => {
+          return new HttpClient(backend);
         }
       }],
-      imports: [HttpModule]
+      imports: [HttpClientModule]
     });
     TestBed.compileComponents();
     // inject service at start of each test
@@ -40,7 +40,7 @@ describe('SearchService', () => {
       destinationCity: 'kol', originCity: 'mum', departureDate: '2017-11-01', returnDate: '2017-11-01', oneway: true, passengers: 1,
       refine: 10000
     };
-    service.searchFlightAvailability(searchParams).then(
+    service.searchFlightAvailability(searchParams).subscribe(
       (result) => {
         console.log('serice test2', result);
         expect(result).toBeDefined();
@@ -50,7 +50,7 @@ describe('SearchService', () => {
   });
 
   it('should run a test that gives a object type response', (done) => {
-    service.getCitiesListedOnServer().then(
+    service.getCitiesListedOnServer().subscribe(
       (result) => {
         console.log('type of', result);
         expect(result).toBeDefined();

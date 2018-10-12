@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SearchBoxComponent } from './search-box.component';
-import { HttpModule } from '@angular/http';
+// import { HttpModule } from '@angular/http';
 
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { SearchService } from '../../services/search.service';
 
 describe('SearchBoxComponent', () => {
@@ -13,7 +13,7 @@ describe('SearchBoxComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SearchBoxComponent],
-      imports: [FormsModule, HttpModule],
+      imports: [ReactiveFormsModule],
       providers: [SearchService]
     })
       .compileComponents();
