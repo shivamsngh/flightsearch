@@ -2,13 +2,18 @@
 
 This project was built for an assessment as a part of hiring process for a place where thoughts actually Work ! :D
 
+## Tech Stack
+
+Built with Angular 6 and RxJS 
+Full Chunk Size is 387 KB (Tested on Firefox and Chrome) 
+
 ## Cross Browser Compatibility
 
 Chrome (Version 61.0.3163.100) -> Fully Functional 
 
 Safari (Version 11.0 (12604.1.38.1.7)) -> Fully Functional 
 
-Firefox (Version 56.0.1) -> Functional except HTML5 datepicker, fallback TEXT accepting only YYYY-DD-MM pattern 
+Firefox (Version 62.0.3 (64-bit)) -> Fully Functional 
 
 Opera (Version	48.0.2685.39) -> Fully Functional 
 
