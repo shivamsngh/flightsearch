@@ -13,6 +13,7 @@ import { FlightDetailsCardComponent } from '../components/flight-details-card/fl
 
 //services
 import { SearchService } from '../services/search.service';
+import { MapViewComponent } from '../components/map-view/map-view.component';
 
 export function providers() {
   return [SearchService];
@@ -31,7 +32,8 @@ export function declarations() {
     AppComponent,
     SearchBoxComponent,
     InfoBoxComponent,
-    FlightDetailsCardComponent
+    FlightDetailsCardComponent,
+    MapViewComponent
   ];
 }
 

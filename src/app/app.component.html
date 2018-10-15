@@ -1,12 +1,25 @@
 <div class="wrapper">
-  <div class="header"><h1>{{title}}</h1></div>
+  <div class="header">
+    <h1>{{title}}</h1>
+  </div>
   <div class="search-box">
     <search-box (onSearchResults)="updateInputParams($event)" (loadingComponent)="swapLoading($event)"></search-box>
   </div>
- 
+
+  <ng-container *ngIf="searchResults.oneWayFlights.length === 0 && searchResults.returningFlights.length === 0">
+    <div class="flight-card">
+      <map-view view="assets/maps/india.png">
+
+      </map-view>
+    </div>
+  </ng-container>
+
+<ng-container *ngIf="searchResults.oneWayFlights.length !== 0 || searchResults.returningFlights.length !== 0">
   <div class="flight-card" [ngClass]="{'loading':loading}">
     <flight-details-card [searchResults]="searchResults" (fly)="updateFlying($event)"></flight-details-card>
   </div>
+</ng-container>
+  
 </div>
 <footer>
   <div class="footer">
