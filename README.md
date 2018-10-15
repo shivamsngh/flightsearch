@@ -5,7 +5,14 @@ This project was built for an assessment as a part of hiring process for a place
 ## Tech Stack
 
 Built with Angular 6 and RxJS 
-Full Chunk Size is 387 KB (Tested on Firefox and Chrome) 
+Full Chunk Size is 387 KB (Tested on Firefox and Chrome)
+
+# Road Map
+
+* Server Side Rendering with Angular 6
+* Maps based Airport selection, possibly with leaflet
+* Open source Flight search API integration
+* Nodejs based Express Server
 
 ## Cross Browser Compatibility
 
