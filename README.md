@@ -1,6 +1,6 @@
 # Flight Search Engine
 
-This project was built for an assessment as a part of hiring process for a place where thoughts actually Work ! :D
+This project was started as an assessment part of hiring process for a place where thoughts actually Work ! :D
 
 ## Tech Stack
 
