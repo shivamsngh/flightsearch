@@ -51,24 +51,21 @@ End-To-End test is writen using protractor. Run `ng e2e` to execute the end-to-e
 ## My Profile
 You can find me on https//shivamsngh.github.io
 
-# Problem statement​:
-● Create a flight JSON data object for your all flights available to make the search happen.
+# Basic Information​:
+● Mock flight data
 ##### src/assets/data/flight-data.json
-● Take the User input from the search form and perform a search on the flight JSON data
-and display the valid search results in the results section.
+
 ##### src/components/search-box component
-● There are two tabs for return and one way search form, the return date should be visible
-on basis of the tab selected.
+● Search Box
 ##### src/components/search-box component
+● Flights List
 ##### src/components/flight-details-card component
-##### src/components/info-box component
-● Slider should refine the search results based on the selected price range.
+● Slider Component
 ##### src/components/search-box component
-● Feel free to use any JS frameworks (like Angular or ReactJS) or Core JS to build this
-application.
-##### Angular 4+
-● Test your code with some unit tests
-##### e2e
+● Framework
+##### Angular 6
+● Tests
+##### e2e & unit
 ##### all components have unit test case file as COMPONENT_NAME.spec.ts
 
 
