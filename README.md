@@ -49,7 +49,7 @@ Unit Tests are written using Karma and Jasmine. Run `ng test` to execute the uni
 End-To-End test is writen using protractor. Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
 ## My Profile
-You can find me chilling on [my website](https//shivamsngh.github.io).
+You can find me chilling on [my website](https://shivamsngh.github.io).
 
 # Basic Information​:
 ● Mock flight data
